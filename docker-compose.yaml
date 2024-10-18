@@ -1,0 +1,47 @@
+version: "3.2"
+services:
+  invoice_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "php artisan serve --host=0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - 1067:8000
+    networks:
+      - invoice_service_network
+
+  invoice_service_queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "php artisan queue:work"
+    networks:
+      - invoice_service_network
+
+  invoice_service_database:
+    image: mariadb:10.5.8
+    environment:
+      - MYSQL_ROOT_PASSWORD=Ubuxa##99
+      - MYSQL_DATABASE=forge
+      - MYSQL_USER=forge
+      - MYSQL_PASSWORD=Ubuxa##99
+    networks:
+      - invoice_service_network
+  # phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 1068:80
+    environment:
+      - PMA_HOST=invoice_service_database
+      - PMA_PASSWORD=Ubuxa##99
+    networks:
+      - invoice_service_network
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+networks:
+  invoice_service_network:

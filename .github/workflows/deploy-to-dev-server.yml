@@ -1,0 +1,130 @@
+name: nnpc_service_name_placeholder_deploy
+
+on:
+  # push:
+  #   # branches:
+  #   #   - main
+  pull_request:
+    branches:
+      - dev
+    types: [closed]
+
+jobs:
+  deploy-service_name_placeholder-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.3'
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Install Dependencies
+        run: CI=false composer clear-cache && CI=false composer install && CI=false php artisan key:generate
+
+      - name: Run Tests
+        run: CI=false php artisan test
+
+  deploy-service_name_placeholder-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.3'
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Install Dependencies
+        run: CI=false composer clear-cache && CI=false composer install && CI=false php artisan key:generate
+
+      - name: Update apt repositories
+        run: sudo apt update
+
+      - name: Install rsync
+        run: sudo apt-get install -y rsync
+
+      # - name: Find and replace nnpc reusable env variables
+      #   run: |
+      #     sed -i -e 's:AUTOMATOR_TASK_CREATED=forge:AUTOMATOR_TASK_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:AUTOMATOR_TASK_UPDATED=forge:AUTOMATOR_TASK_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:AUTOMATOR_TASK_DELETED=forge:AUTOMATOR_TASK_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:CUSTOMER_CREATED=forge:CUSTOMER_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:CUSTOMER_UPDATED=forge:CUSTOMER_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:CUSTOMER_DELETED=forge:CUSTOMER_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:CUSTOMER_SITE_CREATED=forge:CUSTOMER_SITE_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:CUSTOMER_SITE_UPDATED=forge:CUSTOMER_SITE_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:CUSTOMER_SITE_DELETED=forge:CUSTOMER_SITE_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:DEPARTMENT_CREATED=forge:DEPARTMENT_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:DEPARTMENT_UPDATED=forge:DEPARTMENT_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:DEPARTMENT_DELETED=forge:DEPARTMENT_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:DESIGNATION_CREATED=forge:DESIGNATION_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:DESIGNATION_UPDATED=forge:DESIGNATION_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:DESIGNATION_DELETED=forge:DESIGNATION_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:FORM_BUILDER_CREATED=forge:FORM_BUILDER_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:FORM_BUILDER_UPDATED=forge:FORM_BUILDER_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:FORM_BUILDER_DELETED=forge:FORM_BUILDER_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:FORM_DATA_CREATED=forge:FORM_DATA_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:FORM_DATA_UPDATED=forge:FORM_DATA_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:FORM_DATA_DELETED=forge:FORM_DATA_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:NOTIFICATION_TASK_CREATED=forge:NOTIFICATION_TASK_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:NOTIFICATION_TASK_UPDATED=forge:NOTIFICATION_TASK_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:NOTIFICATION_TASK_DELETED=forge:NOTIFICATION_TASK_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_CREATED=forge:PROCESSFLOW_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_UPDATED=forge:PROCESSFLOW_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_DELETED=forge:PROCESSFLOW_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_STEP_CREATED=forge:PROCESSFLOW_STEP_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_STEP_UPDATED=forge:PROCESSFLOW_STEP_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_STEP_DELETED=forge:PROCESSFLOW_STEP_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_HISTORY_CREATED=forge:PROCESSFLOW_HISTORY_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_HISTORY_UPDATED=forge:PROCESSFLOW_HISTORY_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:PROCESSFLOW_HISTORY_DELETED=forge:PROCESSFLOW_HISTORY_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:ROUTE_CREATED=forge:ROUTE_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:ROUTE_UPDATED=forge:ROUTE_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:ROUTE_DELETED=forge:ROUTE_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:UNIT_CREATED=forge:UNIT_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:UNIT_UPDATED=forge:UNIT_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:UNIT_DELETED=forge:UNIT_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:USER_CREATED=forge:USER_CREATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:USER_UPDATED=forge:USER_UPDATED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:USER_DELETED=forge:USER_DELETED=sample1,sample2:g' .env &&
+      #     sed -i -e 's:TAG_CREATED=forge:TAG_CREATED=sample1,sample2:g' .env 
+          
+
+      - name: Find and replace in document
+        run: |
+          sed -i -e 's:/public/index.php:/index.php:g' public/index.php &&
+          sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php &&
+          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_service_name_placeholder:g' .env &&
+          sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_nnpc:g' .env  &&
+          sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php &&
+          sed -i -e 's:DB_PASSWORD=forge:DB_PASSWORD=nnpcNGML:g' .env &&
+          sed -i -e "s|USERS_MS=forge|USERS_MS=${{ secrets.USERS_MS }}|g" .env &&
+          sed -i -e "s:RABBITMQ_HOST=forge:RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}:g" .env &&
+          sed -i -e "s:RABBITMQ_PORT=forge:RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}:g" .env &&
+          sed -i -e "s:RABBITMQ_USER=forge:RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}:g" .env &&
+          sed -i -e "s:RABBITMQ_PASSWORD=forge:RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}:g" .env &&
+          sed -i -e "s:RABBITMQ_VHOST=forge:RABBITMQ_VHOST=${{ secrets.RABBITMQ_VHOST }}:g" .env
+# change service_name_placeholder to the name of your service eg automator etc 
+      - name: SSH login
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          rsync --delete -va -e 'ssh -p 7822 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
+            app database phpunit.xml storage vendor artisan .env tests bootstrap \
+            composer.json resources composer.lock routes config package.json \
+            public/ public skillz@185.160.67.60:nnpc/api/service_name_placeholder
+# change service_name_placeholder to the name of your service eg automator etc  
+      - name: SSH and effect migration
+        run: |
+          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60 "cd nnpc/api/service_name_placeholder && php artisan migrate && php artisan db:seed "
