@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceAdviceApprovedByController;
 use App\Http\Controllers\InvoiceAdviceController;
 use App\Http\Controllers\InvoiceAdviceListItemController;
 use App\Http\Controllers\LetterTemplateController;
@@ -36,6 +37,9 @@ Route::middleware('scope.user')->group(function () {
     Route::get('ngml-accounts', [NgmlAccountController::class, 'index']);
     Route::get('ngml-accounts/{id}', [NgmlAccountController::class, 'show']);
     Route::delete('ngml-accounts/{id}', [NgmlAccountController::class, 'destroy']);
+    Route::get('invoice-advice-approved-bies', [InvoiceAdviceApprovedByController::class, 'index']);
+    Route::get('invoice-advice-approved-bies/{id}', [InvoiceAdviceApprovedByController::class, 'show']);
+    Route::delete('invoice-advice-approved-bies/{id}', [InvoiceAdviceApprovedByController::class, 'destroy']);
 });
 
 
