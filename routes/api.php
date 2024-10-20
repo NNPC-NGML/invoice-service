@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GccApprovedByAdminController;
+use App\Http\Controllers\GccApprovedByCustomerController;
 use App\Http\Controllers\InvoiceAdviceApprovedByController;
 use App\Http\Controllers\InvoiceAdviceController;
 use App\Http\Controllers\InvoiceAdviceListItemController;
@@ -48,6 +49,9 @@ Route::middleware('scope.user')->group(function () {
     Route::get('gcc-approved-by-admins', [GccApprovedByAdminController::class, 'index']);
     Route::get('gcc-approved-by-admins/{id}', [GccApprovedByAdminController::class, 'show']);
     Route::delete('gcc-approved-by-admins/{id}', [GccApprovedByAdminController::class, 'destroy']);
+    Route::get('gcc-approved-by-customers', [GccApprovedByCustomerController::class, 'index']);
+    Route::get('gcc-approved-by-customers/{id}', [GccApprovedByCustomerController::class, 'show']);
+    Route::delete('gcc-approved-by-customers/{id}', [GccApprovedByCustomerController::class, 'destroy']);
 });
 
 
