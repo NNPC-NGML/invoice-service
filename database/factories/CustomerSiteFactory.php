@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CustomerSiteFactory extends Factory
 {
+    protected $model = \Skillz\Nnpcreusable\Models\CustomerSite::class;
     /**
      * Define the model's default state.
      *

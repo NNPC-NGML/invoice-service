@@ -4,6 +4,8 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\InvoiceAdvice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Skillz\Nnpcreusable\Models\Customer;
+use Skillz\Nnpcreusable\Models\CustomerSite;
 use Tests\TestCase;
 
 class InvoiceAdviceControllerTest extends TestCase
@@ -45,6 +47,36 @@ class InvoiceAdviceControllerTest extends TestCase
                 'status' => 'success',
             ])
             ->assertJsonCount(5, 'data'); // Should return 5 records on the second page
+    }
+
+    /**
+     * Test if a specific invoice advice can be created.
+     *
+     * @return void
+     */
+    public function test_it_can_create_a_single_invoice_advice()
+    {
+        $this->actingAsAuthenticatedTestUser();
+
+        $customer = Customer::factory()->create();
+        $customerSite = CustomerSite::factory()->create([
+            'customer_id' => $customer->id
+        ]);
+
+        $response = $this->postJson("/api/invoice-advice", [
+            'customer_id' => $customer->id,
+            'customer_site_id' => $customerSite->id,
+        ]);
+
+        //check if invoice advice is returned
+        $response->assertStatus(201)
+            ->assertJson([
+                'status' => 'success',
+                'data' => [
+                    'customer_id' => $customer->id,
+                    'customer_site_id' => $customerSite->id,
+                ],
+            ]);
     }
 
     /**

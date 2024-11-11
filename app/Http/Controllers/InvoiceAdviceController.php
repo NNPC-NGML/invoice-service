@@ -162,8 +162,8 @@ class InvoiceAdviceController extends Controller
                 'department' => "Gas Distribution {$customerSite->site_address}",
 
                 // TODO confirm these fields
-                'gcc_created_by' => auth()->user()->id,
-                'invoice_advice_created_by' => auth()->user()->id,
+                'gcc_created_by' => auth()->id(),
+                'invoice_advice_created_by' => auth()->id(),
             ]);
 
             $invoiceItem = $this->invoiceAdviceService->create($request->all());
