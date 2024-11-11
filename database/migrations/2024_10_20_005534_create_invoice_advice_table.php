@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('invoice_advice', function (Blueprint $table) {
             $table->id();
-            $table->boolean('with_vat');
+            $table->boolean('with_vat')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('customer_site_id');
-            $table->string('capex_recovery_amount');
+            $table->string('capex_recovery_amount')->nullable();
             $table->dateTime('date');
-            $table->integer('status');
+            $table->integer('status')->default(1);
+            $table->string('department');
+            $table->unsignedBigInteger('gcc_created_by')->nullable();
+            $table->unsignedBigInteger('invoice_advice_created_by')->nullable();
             $table->timestamps();
         });
     }

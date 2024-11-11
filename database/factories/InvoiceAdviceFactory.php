@@ -23,6 +23,9 @@ class InvoiceAdviceFactory extends Factory
             'capex_recovery_amount' => fake()->randomFloat(2, 0, 1000000),
             'date' => fake()->dateTime(),
             'status' => fake()->numberBetween(0, 3),
+            'department' => fake()->randomElement(['Gas Distribution', 'Gas Sales', 'Gas Distribution Delta']),
+            'gcc_created_by' => fake()->randomNumber(),
+            'invoice_advice_created_by' => fake()->randomNumber(),
         ];
     }
 }

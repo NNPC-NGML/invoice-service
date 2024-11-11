@@ -29,6 +29,7 @@ Route::middleware('scope.user')->group(function () {
         return response()->json(['message' => 'Access granted']);
     });
     Route::get('invoice-advice', [InvoiceAdviceController::class, 'index']);
+    Route::post('invoice-advice', [InvoiceAdviceController::class, 'store']);
     Route::get('invoice-advice/{id}', [InvoiceAdviceController::class, 'show']);
     Route::delete('invoice-advice/{id}', [InvoiceAdviceController::class, 'destroy']);
     Route::get('invoice-advice-list-items', [InvoiceAdviceListItemController::class, 'index']);

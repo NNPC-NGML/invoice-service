@@ -15,16 +15,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('customer_site_id');
+            $table->unsignedBigInteger('invoice_advice_id');
+            $table->unsignedBigInteger('daily_volume_id');
             $table->string('volume');
-            $table->string('inlet');
-            $table->string('outlet');
-            $table->string('take_or_pay_value');
-            $table->string('allocation');
-            $table->string('daily_target');
-            $table->string('nomination');
-            $table->unsignedBigInteger('daily_gas_id');
+            $table->string('inlet')->nullable();
+            $table->string('outlet')->nullable();
+            $table->string('take_or_pay_value')->nullable();
+            $table->string('allocation')->nullable();
+            $table->string('daily_target')->nullable();
+            $table->string('nomination')->nullable();
             $table->dateTime('date');
-            $table->integer('status');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

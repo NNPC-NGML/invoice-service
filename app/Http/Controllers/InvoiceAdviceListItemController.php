@@ -107,6 +107,22 @@ class InvoiceAdviceListItemController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        try {
+            $invoiceItem = $this->invoiceAdviceListItemService->create($request->all());
+
+            return (new InvoiceAdviceListItemResource($invoiceItem))
+                ->additional(['status' => 'success'])
+                ->response();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
     /**
      * Get details of a specific InvoiceAdviceListItem by ID.
      *

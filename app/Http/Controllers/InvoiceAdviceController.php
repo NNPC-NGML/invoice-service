@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\InvoiceAdviceResource;
+use App\Models\Invoice;
+use App\Models\InvoiceAdvice;
 use App\Services\InvoiceAdviceService;
 use Illuminate\Http\Request;
+use Skillz\Nnpcreusable\Models\CustomerSite;
 
 class InvoiceAdviceController extends Controller
 {
@@ -112,6 +115,62 @@ class InvoiceAdviceController extends Controller
                 ])
                 ->response()
                 ->setStatusCode(200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        try {
+
+            if (!isset($request->customer_id) || !isset($request->customer_site_id)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Customer ID and Customer Site ID are required.',
+                ], 400);
+            }
+
+            //TODO verify using zone_id to get Zone Name, or using site_address
+            $customerSite = CustomerSite::find($request->customer_site_id);
+            if (!$customerSite) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Customer Site not found.',
+                ], 404);
+            }
+
+            // Get the start and end dates of the previous month
+            $startOfLastMonth = now()->subMonth()->startOfMonth();
+            $endOfLastMonth = now()->subMonth()->endOfMonth();
+
+            // Check if there's a record created in the last month
+            $recordExists = InvoiceAdvice::whereBetween('date', [$startOfLastMonth, $endOfLastMonth])->exists();
+
+            if ($recordExists) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Record already exists for the last month.',
+                ]);
+            }
+
+            $request->merge([
+                'date' => now()->subMonth(),
+                'department' => "Gas Distribution {$customerSite->site_address}",
+
+                // TODO confirm these fields
+                'gcc_created_by' => auth()->user()->id,
+                'invoice_advice_created_by' => auth()->user()->id,
+            ]);
+
+            $invoiceItem = $this->invoiceAdviceService->create($request->all());
+
+            return (new InvoiceAdviceResource($invoiceItem))
+                ->additional(['status' => 'success'])
+                ->response();
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 'error',

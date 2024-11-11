@@ -24,29 +24,31 @@ class InvoiceAdviceListItemService
         $rules = $is_update === false ? [
             'customer_id' => 'required|integer',
             'customer_site_id' => 'required|integer',
-            'volume' => 'required|numeric',
-            'inlet' => 'required|string',
-            'outlet' => 'required|string',
-            'take_or_pay_value' => 'required|string',
-            'allocation' => 'required|string',
-            'daily_target' => 'required|string',
-            'nomination' => 'required|string',
-            'daily_gas_id' => 'required|integer',
+            'invoice_advice_id' => 'required|integer',
+            'daily_volume_id' => 'required|integer',
+            'volume' => 'required|string',
+            'inlet' => 'nullable|string',
+            'outlet' => 'nullable|string',
+            'take_or_pay_value' => 'nullable|string',
+            'allocation' => 'nullable|string',
+            'daily_target' => 'nullable|string',
+            'nomination' => 'nullable|string',
             'date' => 'required|date',
-            'status' => 'required|integer',
+            'status' => 'sometimes|integer',
         ] : [
             'customer_id' => 'sometimes|required|integer',
             'customer_site_id' => 'sometimes|required|integer',
-            'volume' => 'sometimes|required|numeric',
-            'inlet' => 'sometimes|required|string',
-            'outlet' => 'sometimes|required|string',
-            'take_or_pay_value' => 'sometimes|required|string',
-            'allocation' => 'sometimes|required|string',
-            'daily_target' => 'sometimes|required|string',
-            'nomination' => 'sometimes|required|string',
-            'daily_gas_id' => 'sometimes|required|integer',
+            'invoice_advice_id' => 'sometimes|required|integer',
+            'daily_volume_id' => 'sometimes|required|integer',
+            'volume' => 'sometimes|required|string',
+            'inlet' => 'nullable|string',
+            'outlet' => 'nullable|string',
+            'take_or_pay_value' => 'nullable|string',
+            'allocation' => 'nullable|string',
+            'daily_target' => 'nullable|string',
+            'nomination' => 'nullable|string',
             'date' => 'sometimes|required|date',
-            'status' => 'sometimes|required|integer',
+            'status' => 'sometimes|integer',
         ];
 
         // Run the validator with the specified rules
@@ -58,6 +60,7 @@ class InvoiceAdviceListItemService
 
         return $validator->validated();
     }
+
 
     /**
      * Get all invoice advice list items with optional filters and pagination.
@@ -123,6 +126,36 @@ class InvoiceAdviceListItemService
                 $invoiceAdviceListItemCreated = InvoiceAdviceListItem::create($validatedData);
 
                 return $invoiceAdviceListItemCreated;
+            } catch (\Throwable $e) {
+                Log::error('Unexpected error during invoice advice list item creation: ' . $e->getMessage(), [
+                    'exception' => $e,
+                    'trace' => $e->getTraceAsString(),
+                ]);
+                throw $e;
+            }
+        });
+    }
+
+    /**
+     * Create a new invoice advice list item.
+     *
+     * @param array $data The data for creating the invoice advice list item.
+     * @return bool The status of the bulk insertion.
+     * @throws \Throwable
+     */
+    public function bulkInsert(array $data): bool
+    {
+        Log::info('Starting invoice advice list item creation process', ['data' => $data]);
+
+        return DB::transaction(function () use ($data) {
+            try {
+                // Validate and create the Invoice Advice List Item
+                $insertionData = [];
+                foreach ($data as $item) {
+                    $insertionData[] = $this->validateInvoiceAdviceListItem($item);
+                }
+
+                return InvoiceAdviceListItem::insert($insertionData);
             } catch (\Throwable $e) {
                 Log::error('Unexpected error during invoice advice list item creation: ' . $e->getMessage(), [
                     'exception' => $e,

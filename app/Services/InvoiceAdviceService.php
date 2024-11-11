@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\DailyVolume;
 use App\Models\InvoiceAdvice;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,19 +23,25 @@ class InvoiceAdviceService
     {
         // Define validation rules based on whether it's an update or create request
         $rules = $is_update === false ? [
-            'with_vat' => 'required|boolean',
+            'with_vat' => 'nullable|boolean',
             'customer_id' => 'required|integer',
             'customer_site_id' => 'required|integer',
-            'capex_recovery_amount' => 'required|numeric|min:0',
+            'capex_recovery_amount' => 'nullable|string',
             'date' => 'required|date',
-            'status' => 'required|integer',
+            'status' => 'sometimes|integer',
+            'department' => 'required|string',
+            'gcc_created_by' => 'nullable|integer',
+            'invoice_advice_created_by' => 'nullable|integer',
         ] : [
             'with_vat' => 'sometimes|required|boolean',
             'customer_id' => 'sometimes|required|integer',
             'customer_site_id' => 'sometimes|required|integer',
-            'capex_recovery_amount' => 'sometimes|required|numeric|min:0',
-            'date' => 'sometimes|required|date',
+            'capex_recovery_amount' => 'sometimes|required|string',
+            'date' => 'sometimes|date',
             'status' => 'sometimes|required|integer',
+            'department' => 'sometimes|required|string',
+            'gcc_created_by' => 'sometimes|nullable|integer',
+            'invoice_advice_created_by' => 'sometimes|nullable|integer',
         ];
 
         // Run the validator with the specified rules
@@ -46,6 +53,7 @@ class InvoiceAdviceService
 
         return $validator->validated();
     }
+
 
     /**
      * Get all invoice advice records with optional filters and pagination.
@@ -60,7 +68,7 @@ class InvoiceAdviceService
 
         // Apply dynamic filters
         foreach ($filters as $key => $value) {
-            if($key !== 'with_vat' && $key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'status' && $key !== 'date_from' && $key !== 'date_to') {
+            if ($key !== 'with_vat' && $key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'status' && $key !== 'date_from' && $key !== 'date_to') {
                 continue;
             }
             switch ($key) {
@@ -116,11 +124,31 @@ class InvoiceAdviceService
 
         return DB::transaction(function () use ($data) {
             try {
-                // Validate and create the Invoice Advice entry
+                $startOfLastMonth = now()->subMonth()->startOfMonth();
+                $endOfLastMonth = now()->subMonth()->endOfMonth();
+                $dailyVolumes = DailyVolume::where('customer_id', $data['customer_id'])
+                    ->where('customer_site_id', $data['customer_site_id'])
+                    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->get();
+
+
                 $validatedData = $this->validateInvoiceAdvice($data);
                 $invoiceAdviceCreated = InvoiceAdvice::create($validatedData);
 
-                return $invoiceAdviceCreated;
+                $inoiceAdviceListItemService = new InvoiceAdviceListItemService();
+                $items = [];
+                foreach ($dailyVolumes as $dailyVolume) {
+                    $item = [
+                        'customer_id' => $data['customer_id'],
+                        'customer_site_id' => $data['customer_site_id'],
+                        'invoice_advice_id' => $invoiceAdviceCreated->id,
+                        'daily_volume_id' => $dailyVolume->id,
+                        'volume' => $dailyVolume->volume,
+                        'date' => $invoiceAdviceCreated->date,
+                    ];
+                    $items[] = $item;
+                }
+
+                return $inoiceAdviceListItemService->bulkInsert($items);
             } catch (\Throwable $e) {
                 Log::error('Unexpected error during invoice advice creation: ' . $e->getMessage(), [
                     'exception' => $e,
