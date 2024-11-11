@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Models\InvoiceAdvice;
 use App\Models\InvoiceAdviceListItem;
 use App\Services\InvoiceAdviceListItemService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,6 +35,8 @@ class InvoiceAdviceListItemServiceTest extends TestCase
         $data = [
             'customer_id' => 1,
             'customer_site_id' => 1,
+            'invoice_advice_id' => 1,
+            'daily_volume_id' => 1,
             'volume' => '5000',
             'inlet' => '100',
             'outlet' => '90',
@@ -41,7 +44,6 @@ class InvoiceAdviceListItemServiceTest extends TestCase
             'allocation' => '6000',
             'daily_target' => '4500',
             'nomination' => '4200',
-            'daily_gas_id' => 1,
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
         ];
@@ -89,9 +91,15 @@ class InvoiceAdviceListItemServiceTest extends TestCase
     {
         $service = $this->getService();
 
+        $invoiceAdvice = InvoiceAdvice::factory()->create();
+
+        // $response = $this->getJson("/api/invoice-advice/{$invoiceAdvice->id}");
+
         $data = [
             'customer_id' => 1,
             'customer_site_id' => 1,
+            'invoice_advice_id' => $invoiceAdvice->id,
+            'daily_volume_id' => 1,
             'volume' => '5000',
             'inlet' => '100',
             'outlet' => '90',
@@ -99,7 +107,6 @@ class InvoiceAdviceListItemServiceTest extends TestCase
             'allocation' => '6000',
             'daily_target' => '4500',
             'nomination' => '4200',
-            'daily_gas_id' => 1,
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
         ];
@@ -124,6 +131,8 @@ class InvoiceAdviceListItemServiceTest extends TestCase
         $invoiceAdviceListItem = InvoiceAdviceListItem::factory()->create([
             'customer_id' => 1,
             'customer_site_id' => 1,
+            'invoice_advice_id' => 1,
+            'daily_volume_id' => 1,
             'volume' => '5000',
             'inlet' => '100',
             'outlet' => '90',
@@ -131,7 +140,6 @@ class InvoiceAdviceListItemServiceTest extends TestCase
             'allocation' => '6000',
             'daily_target' => '4500',
             'nomination' => '4200',
-            'daily_gas_id' => 1,
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
         ]);
@@ -161,7 +169,7 @@ class InvoiceAdviceListItemServiceTest extends TestCase
 
         $data = [
             'id' => $invoiceAdviceListItem->id,
-            'volume' => 'invalid_volume', // invalid
+            'volume' => null, // invalid
         ];
 
         $service->update($data);

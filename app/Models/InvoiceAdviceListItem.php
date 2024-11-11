@@ -12,6 +12,8 @@ class InvoiceAdviceListItem extends Model
     protected $fillable = [
         'customer_id',
         'customer_site_id',
+        'invoice_advice_id',
+        'daily_volume_id',
         'volume',
         'inlet',
         'outlet',
@@ -19,7 +21,6 @@ class InvoiceAdviceListItem extends Model
         'allocation',
         'daily_target',
         'nomination',
-        'daily_gas_id',
         'date',
         'status'
     ];

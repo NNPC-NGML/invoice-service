@@ -38,6 +38,9 @@ class InvoiceAdviceServiceTest extends TestCase
             'capex_recovery_amount' => '1000.00',
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
+            'department' => 'Gas Department Ajah',
+            'gcc_created_by' => 1,
+            'invoice_advice_created_by' => 1,
         ];
 
         $validatedData = $service->validateInvoiceAdvice($data);
@@ -84,6 +87,9 @@ class InvoiceAdviceServiceTest extends TestCase
             'capex_recovery_amount' => '1000.00',
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
+            'department' => 'Gas Department Ajah',
+            'gcc_created_by' => 1,
+            'invoice_advice_created_by' => 1,
         ];
 
         $invoiceAdvice = $service->create($data);
@@ -109,6 +115,9 @@ class InvoiceAdviceServiceTest extends TestCase
             'capex_recovery_amount' => '1000.00',
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
+            'department' => 'Gas Department Ajah',
+            'gcc_created_by' => 1,
+            'invoice_advice_created_by' => 1,
         ]);
 
         $data = [
@@ -136,7 +145,7 @@ class InvoiceAdviceServiceTest extends TestCase
 
         $data = [
             'id' => $invoiceAdvice->id,
-            'capex_recovery_amount' => 'invalid_amount', // invalid
+            'capex_recovery_amount' => false, // invalid
         ];
 
         $service->update($data);

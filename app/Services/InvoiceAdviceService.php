@@ -148,7 +148,11 @@ class InvoiceAdviceService
                     $items[] = $item;
                 }
 
-                return $inoiceAdviceListItemService->bulkInsert($items);
+                $insert = $inoiceAdviceListItemService->bulkInsert($items);
+                if ($insert) {
+                    return $invoiceAdviceCreated;
+                }
+                return false;
             } catch (\Throwable $e) {
                 Log::error('Unexpected error during invoice advice creation: ' . $e->getMessage(), [
                     'exception' => $e,

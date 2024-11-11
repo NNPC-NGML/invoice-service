@@ -15,7 +15,10 @@ class InvoiceAdvice extends Model
         'customer_site_id',
         'capex_recovery_amount',
         'date',
-        'status'
+        'status',
+        'department',
+        'gcc_created_by',
+        'invoice_advice_created_by'
     ];
 
     protected $casts = [
