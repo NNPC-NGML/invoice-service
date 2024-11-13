@@ -12,9 +12,20 @@ abstract class TestCase extends BaseTestCase
 
     public function actingAsAuthenticatedTestUser()
     {
-        Http::fake([
-            env("USERS_MS") . '/*' => Http::response('ok', 200),
+        // Create or retrieve a user instance
+        $user = \App\Models\User::factory()->create([
+            'id' => 1,  // Ensure it matches the ID in the fake response, if necessary
         ]);
+
+        // Mock HTTP responses
+        Http::fake([
+            env("USERS_MS") . '/*' => Http::response(["id" => $user->id], 200),
+        ]);
+
+        // Set the user as the authenticated user
+        $this->actingAs($user);
+
+        return $user;
 
     }
     public function actingAsUnAuthenticatedTestUser()
