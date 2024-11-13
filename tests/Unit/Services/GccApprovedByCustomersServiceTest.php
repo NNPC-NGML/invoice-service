@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Models\GccApprovedByCustomer;
+use App\Models\InvoiceAdvice;
 use App\Services\GccApprovedByCustomerService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
@@ -71,10 +72,13 @@ class GccApprovedByCustomersServiceTest extends TestCase
     {
         $service = $this->getService();
 
+        $invoice_advice = InvoiceAdvice::factory()->create();
+
         $data = [
             'customer_name' => 'Jane Smith',
             'signature' => 'signature_image.png',
             'date' => '2024-01-01 14:00:00',
+            'invoice_advice_id' => $invoice_advice->id,
         ];
 
         $gccApproval = $service->create($data);
@@ -96,10 +100,13 @@ class GccApprovedByCustomersServiceTest extends TestCase
 
         $service = $this->getService();
 
+        $invoice_advice = InvoiceAdvice::factory()->create();
+
         $data = [
             'customer_name' => 'Customer Name',
             'signature' => 'valid_signature.png',
             'date' => -100000,  //invalid data
+            'invoice_advice_id' => $invoice_advice->id,
         ];
 
         $service->create($data);

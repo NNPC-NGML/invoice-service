@@ -121,6 +121,74 @@ class GccApprovedByAdminController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/gcc-approved-by-admins",
+     *     tags={"Gcc Approved By Admin"},
+     *     summary="Store a new GCC approved record by admin",
+     *     description="Creates a new GCC approved record with the provided invoice advice ID and additional admin data.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"invoice_advice_id"},
+     *             @OA\Property(property="invoice_advice_id", type="integer", example=123, description="ID of the invoice advice"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Record created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(ref="#/components/schemas/GccApprovedByAdmin")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Invoice Advice ID is required.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="An error occurred")
+     *         )
+     *     )
+     * )
+     */
+    public function store(Request $request)
+    {
+        try {
+
+            if (!isset($request->invoice_advice_id)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invoice Advice ID is required.',
+                ], 400);
+            }
+
+            $request->merge([
+                'user_id' => auth()->id(),
+                'date' => now(),
+            ]);
+
+            $gccApprovedRecord = $this->gccApprovedByAdminService->create($request->all());
+
+            return (new GccApprovedByAdminResource($gccApprovedRecord))
+                ->additional(['status' => 'success'])
+                ->response();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Get details of a specific GCC approved record by ID.
      *
      * @OA\Get(

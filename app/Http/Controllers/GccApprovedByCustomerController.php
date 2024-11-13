@@ -121,6 +121,59 @@ class GccApprovedByCustomerController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/gcc-approved-by-customers",
+     *     tags={"Gcc Approved By Customer"},
+     *     summary="Store a new GCC approved record",
+     *     description="Creates a new GCC approved record with the provided customer information, signature, and date.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"customer_name", "signature", "date"},
+     *             @OA\Property(property="customer_name", type="string", maxLength=255, example="John Doe", description="Name of the customer"),
+     *             @OA\Property(property="signature", type="string", example="Base64EncodedSignature", description="Customer's digital signature in base64 format"),
+     *             @OA\Property(property="date", type="string", format="date", example="2024-11-13", description="Date of the approval")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Record created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(ref="#/components/schemas/GccApprovedByCustomer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="An error occurred")
+     *         )
+     *     )
+     * )
+     */
+    public function store(Request $request)
+    {
+        try {
+            $gccApprovedRecord = $this->gccApprovedByCustomerService->create($request->all());
+
+            return (new GccApprovedByCustomerResource($gccApprovedRecord))
+                ->additional(['status' => 'success'])
+                ->response();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Get details of a specific GccApprovedByCustomer record by ID.
      *
      * @OA\Get(

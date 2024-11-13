@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Models\GccApprovedByAdmin;
+use App\Models\InvoiceAdvice;
 use App\Services\GccApprovedByAdminService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
@@ -71,10 +72,14 @@ class GccApprovedByAdminServiceTest extends TestCase
     {
         $service = $this->getService();
 
+        $invoice_advice = InvoiceAdvice::factory()->create();
+        $gcc = GccApprovedByAdmin::factory()->create();
+
         $data = [
             'user_id' => 1,
-            'invoice_advice_id' => 1,
+            'invoice_advice_id' => $invoice_advice->id,
             'date' => '2024-01-01 12:00:00',
+            'id' => $gcc->id,
         ];
 
         $gccApproval = $service->create($data);

@@ -29,7 +29,7 @@ Route::middleware('scope.user')->group(function () {
         return response()->json(['message' => 'Access granted']);
     });
     Route::get('invoice-advice', [InvoiceAdviceController::class, 'index']);
-    Route::post('invoice-advice', [InvoiceAdviceController::class, 'store']);
+    Route::post('invoice-advice', [InvoiceAdviceController::class, 'store']);   //new
     Route::get('invoice-advice/{id}', [InvoiceAdviceController::class, 'show']);
     Route::delete('invoice-advice/{id}', [InvoiceAdviceController::class, 'destroy']);
     Route::get('invoice-advice-list-items', [InvoiceAdviceListItemController::class, 'index']);
@@ -48,9 +48,11 @@ Route::middleware('scope.user')->group(function () {
     Route::get('invoices/{id}', [InvoiceController::class, 'show']);
     Route::delete('invoices/{id}', [InvoiceController::class, 'destroy']);
     Route::get('gcc-approved-by-admins', [GccApprovedByAdminController::class, 'index']);
+    Route::post('gcc-approved-by-admins', [GccApprovedByAdminController::class, 'store']);   //new
     Route::get('gcc-approved-by-admins/{id}', [GccApprovedByAdminController::class, 'show']);
     Route::delete('gcc-approved-by-admins/{id}', [GccApprovedByAdminController::class, 'destroy']);
     Route::get('gcc-approved-by-customers', [GccApprovedByCustomerController::class, 'index']);
+    Route::post('gcc-approved-by-customers', [GccApprovedByCustomerController::class, 'store']);   //new
     Route::get('gcc-approved-by-customers/{id}', [GccApprovedByCustomerController::class, 'show']);
     Route::delete('gcc-approved-by-customers/{id}', [GccApprovedByCustomerController::class, 'destroy']);
 });

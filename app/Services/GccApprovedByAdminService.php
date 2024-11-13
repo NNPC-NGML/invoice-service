@@ -112,9 +112,20 @@ class GccApprovedByAdminService
 
         return DB::transaction(function () use ($data) {
             try {
+                $check = GccApprovedByAdmin::where('invoice_advice_id', $data['invoice_advice_id']);
+                if ($check->exists()) {
+                    throw new \Exception('Invoice advice already approved by admin');
+                }
+
                 // Validate and create the approval entry
                 $validatedData = $this->validateApproval($data);
                 $approvalCreated = GccApprovedByAdmin::create($validatedData);
+
+                if($approvalCreated) {
+                    // update gcc_created_by
+                    $service = new InvoiceAdviceService();
+                    $service->update(['gcc_created_by' => $approvalCreated->user_id, 'id' => $approvalCreated->invoice_advice_id]);
+                }
 
                 return $approvalCreated;
             } catch (\Throwable $e) {

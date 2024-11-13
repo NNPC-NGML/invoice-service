@@ -110,6 +110,11 @@ class GccApprovedByCustomerService
 
         return DB::transaction(function () use ($data) {
             try {
+                $check = GccApprovedByCustomer::where('invoice_advice_id', $data['invoice_advice_id']);
+                if ($check->exists()) {
+                    throw new \Exception('Invoice advice already approved by customer');
+                }
+
                 // Validate and create the Customer Approval entry
                 $validatedData = $this->validateCustomerApproval($data);
                 $customerApprovalCreated = GccApprovedByCustomer::create($validatedData);
