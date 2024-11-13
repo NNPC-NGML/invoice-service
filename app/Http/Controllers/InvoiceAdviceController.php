@@ -123,6 +123,54 @@ class InvoiceAdviceController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/invoice-advice",
+     *     tags={"Invoice Advice"},
+     *     summary="Create a new InvoiceAdvice record",
+     *     description="Creates a new InvoiceAdvice record based on the provided customer ID and customer site ID.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"customer_id", "customer_site_id"},
+     *             @OA\Property(property="customer_id", type="integer", example=123, description="ID of the customer"),
+     *             @OA\Property(property="customer_site_id", type="integer", example=456, description="ID of the customer site")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="InvoiceAdvice created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(ref="#/components/schemas/InvoiceAdvice")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Customer ID and Customer Site ID are required.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Customer Site not found.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="An error occurred")
+     *         )
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
