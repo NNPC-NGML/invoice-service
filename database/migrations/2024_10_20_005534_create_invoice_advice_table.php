@@ -19,9 +19,12 @@ return new class extends Migration
             $table->string('capex_recovery_amount')->nullable();
             $table->dateTime('date');
             $table->integer('status')->default(0);
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
+            $table->float('total_quantity_of_gas')->nullable()->comment('Total quantity of gas consumed in Scf');
             $table->string('department');
-            $table->unsignedBigInteger('gcc_created_by')->nullable();
-            $table->unsignedBigInteger('invoice_advice_created_by')->nullable();
+            $table->unsignedBigInteger('gcc_created_by_id')->nullable();
+            $table->unsignedBigInteger('invoice_advice_created_by_id')->nullable();
             $table->timestamps();
         });
     }

@@ -122,9 +122,9 @@ class GccApprovedByAdminService
                 $approvalCreated = GccApprovedByAdmin::create($validatedData);
 
                 if($approvalCreated) {
-                    // update gcc_created_by
+                    // update gcc_created_by_id
                     $service = new InvoiceAdviceService();
-                    $service->update(['gcc_created_by' => $approvalCreated->user_id, 'id' => $approvalCreated->invoice_advice_id]);
+                    $service->update(['gcc_created_by_id' => $approvalCreated->user_id, 'id' => $approvalCreated->invoice_advice_id]);
                 }
 
                 return $approvalCreated;
