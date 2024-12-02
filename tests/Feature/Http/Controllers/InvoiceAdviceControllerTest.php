@@ -21,8 +21,20 @@ class InvoiceAdviceControllerTest extends TestCase
     {
         $this->actingAsAuthenticatedTestUser();
 
+        $customer = Customer::factory()->create();
+        $customerSite = CustomerSite::factory()->create([
+            'customer_id' => $customer->id
+        ]);
+
         // Create some dummy data
-        InvoiceAdvice::factory()->count(15)->create(); // Create 15 records
+        InvoiceAdvice::factory()->count(15)->create(
+            [
+                'customer_id' => $customer->id,
+                'customer_site_id' => $customerSite->id,
+                'gcc_created_by_id' => auth()->user()->id,
+                'invoice_advice_created_by_id' => auth()->user()->id
+            ]
+        ); // Create 15 records
 
         // Request the first page with a per_page limit of 10
         $response = $this->getJson('/api/invoice-advice?per_page=10');
@@ -66,6 +78,8 @@ class InvoiceAdviceControllerTest extends TestCase
         $response = $this->postJson("/api/invoice-advice", [
             'customer_id' => $customer->id,
             'customer_site_id' => $customerSite->id,
+            'gcc_created_by_id' => auth()->user()->id,
+            'invoice_advice_created_by_id' => auth()->user()->id
         ]);
 
         //check if invoice advice is returned

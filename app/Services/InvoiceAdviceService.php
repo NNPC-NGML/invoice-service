@@ -30,8 +30,8 @@ class InvoiceAdviceService
             'date' => 'required|date',
             'status' => 'sometimes|integer',
             'department' => 'required|string',
-            'gcc_created_by' => 'nullable|integer',
-            'invoice_advice_created_by' => 'nullable|integer',
+            'gcc_created_by_id' => 'nullable|integer',
+            'invoice_advice_created_by_id' => 'nullable|integer',
         ] : [
             'with_vat' => 'sometimes|required|boolean',
             'customer_id' => 'sometimes|required|integer',
@@ -40,8 +40,8 @@ class InvoiceAdviceService
             'date' => 'sometimes|date',
             'status' => 'sometimes|required|integer',
             'department' => 'sometimes|required|string',
-            'gcc_created_by' => 'sometimes|nullable|integer',
-            'invoice_advice_created_by' => 'sometimes|nullable|integer',
+            'gcc_created_by_id' => 'sometimes|nullable|integer',
+            'invoice_advice_created_by_id' => 'sometimes|nullable|integer',
         ];
 
         // Run the validator with the specified rules
@@ -128,7 +128,10 @@ class InvoiceAdviceService
                 $endOfLastMonth = now()->subMonth()->endOfMonth();
                 $dailyVolumes = DailyVolume::where('customer_id', $data['customer_id'])
                     ->where('customer_site_id', $data['customer_site_id'])
-                    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->get();
+                    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+                    ->orderBy('created_at')
+                    ->get();
+
 
 
                 $validatedData = $this->validateInvoiceAdvice($data);
@@ -136,7 +139,9 @@ class InvoiceAdviceService
 
                 $inoiceAdviceListItemService = new InvoiceAdviceListItemService();
                 $items = [];
+                $total_quantity_of_gas = 0;
                 foreach ($dailyVolumes as $dailyVolume) {
+                    $total_quantity_of_gas += $dailyVolume->volume;
                     $item = [
                         'customer_id' => $data['customer_id'],
                         'customer_site_id' => $data['customer_site_id'],
@@ -150,9 +155,21 @@ class InvoiceAdviceService
 
                 $insert = $inoiceAdviceListItemService->bulkInsert($items);
                 if ($insert) {
+                    if($dailyVolumes->count() > 0) {
+                        $invoiceAdviceCreated->from_date = $dailyVolumes->first()->created_at;
+                        $invoiceAdviceCreated->to_date = $dailyVolumes->last()->created_at;
+                    }
+                    $invoiceAdviceCreated->total_quantity_of_gas = $total_quantity_of_gas;
+                    $invoiceAdviceCreated->save();
+                    $invoiceAdviceCreated->load('invoice_advice_list_items');
+                    $invoiceAdviceCreated->load('customer');
+                    $invoiceAdviceCreated->load('customer_site');
+                    $invoiceAdviceCreated->load('gcc_created_by');
+                    $invoiceAdviceCreated->load('invoice_advice_created_by');
                     return $invoiceAdviceCreated;
                 }
-                return false;
+
+                throw new \Exception('Failed to create invoice advice');
             } catch (\Throwable $e) {
                 Log::error('Unexpected error during invoice advice creation: ' . $e->getMessage(), [
                     'exception' => $e,

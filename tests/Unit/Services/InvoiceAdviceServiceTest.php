@@ -39,8 +39,8 @@ class InvoiceAdviceServiceTest extends TestCase
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
             'department' => 'Gas Department Ajah',
-            'gcc_created_by' => 1,
-            'invoice_advice_created_by' => 1,
+            'gcc_created_by_id' => 1,
+            'invoice_advice_created_by_id' => 1,
         ];
 
         $validatedData = $service->validateInvoiceAdvice($data);
@@ -88,8 +88,8 @@ class InvoiceAdviceServiceTest extends TestCase
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
             'department' => 'Gas Department Ajah',
-            'gcc_created_by' => 1,
-            'invoice_advice_created_by' => 1,
+            'gcc_created_by_id' => 1,
+            'invoice_advice_created_by_id' => 1,
         ];
 
         $invoiceAdvice = $service->create($data);
@@ -116,8 +116,8 @@ class InvoiceAdviceServiceTest extends TestCase
             'date' => '2024-01-01 12:00:00',
             'status' => 1,
             'department' => 'Gas Department Ajah',
-            'gcc_created_by' => 1,
-            'invoice_advice_created_by' => 1,
+            'gcc_created_by_id' => 1,
+            'invoice_advice_created_by_id' => 1,
         ]);
 
         $data = [

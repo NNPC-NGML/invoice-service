@@ -24,8 +24,11 @@ class InvoiceAdviceFactory extends Factory
             'date' => fake()->dateTime(),
             'status' => fake()->numberBetween(0, 3),
             'department' => fake()->randomElement(['Gas Distribution', 'Gas Sales', 'Gas Distribution Delta']),
-            'gcc_created_by' => fake()->randomNumber(),
-            'invoice_advice_created_by' => fake()->randomNumber(),
+            'gcc_created_by_id' => fake()->randomNumber(),
+            'invoice_advice_created_by_id' => fake()->randomNumber(),
+            'from_date' => fake()->date(),
+            'to_date' => fake()->date(),
+            'total_quantity_of_gas' => fake()->randomFloat(2, 0, 1000000),
         ];
     }
 }
