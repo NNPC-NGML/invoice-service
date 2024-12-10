@@ -21,12 +21,13 @@ class InvoiceAdviceListItem extends Model
         'allocation',
         'daily_target',
         'nomination',
-        'date',
-        'status'
+        'original_date',
+        'gcc_id',
+        'status',
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'original_date' => 'date',
         'status' => 'integer'
     ];
 }

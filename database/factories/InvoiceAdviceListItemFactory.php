@@ -28,7 +28,7 @@ class InvoiceAdviceListItemFactory extends Factory
             'allocation' => fake()->randomFloat(2, 0, 1000000),
             'daily_target' => fake()->randomFloat(2, 0, 1000000),
             'nomination' => fake()->randomFloat(2, 0, 1000000),
-            'date' => fake()->dateTime(), // Use dateTime for timestamps
+            'original_date' => fake()->dateTime(), // Use dateTime for timestamps
             'status' => fake()->numberBetween(0, 3), // Adjust this based on your status values
         ];
     }

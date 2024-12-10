@@ -1,5 +1,6 @@
-name: nnpc_service_name_placeholder_deploy
-
+name: nnpc_billiing_deploy
+# on:
+#   push:
 on:
   # push:
   #   # branches:
@@ -10,7 +11,7 @@ on:
     types: [closed]
 
 jobs:
-  deploy-service_name_placeholder-test:
+  deploy-billing-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,12 +26,14 @@ jobs:
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Install Dependencies
-        run: CI=false composer clear-cache && CI=false composer install && CI=false php artisan key:generate
+        run: CI=false composer clear-cache && CI=false composer update && CI=false php artisan key:generate
 
       - name: Run Tests
-        run: CI=false php artisan test
+        run: |
+          CI=false php artisan test
+          echo "Exit code: $?"
 
-  deploy-service_name_placeholder-dev:
+  deploy-billing-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,7 +48,7 @@ jobs:
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Install Dependencies
-        run: CI=false composer clear-cache && CI=false composer install && CI=false php artisan key:generate
+        run: CI=false composer clear-cache && CI=false composer update && CI=false php artisan key:generate
 
       - name: Update apt repositories
         run: sudo apt update
@@ -53,11 +56,11 @@ jobs:
       - name: Install rsync
         run: sudo apt-get install -y rsync
 
-      # - name: Find and replace nnpc reusable env variables
-      #   run: |
-      #     sed -i -e 's:AUTOMATOR_TASK_CREATED=forge:AUTOMATOR_TASK_CREATED=sample1,sample2:g' .env &&
-      #     sed -i -e 's:AUTOMATOR_TASK_UPDATED=forge:AUTOMATOR_TASK_UPDATED=sample1,sample2:g' .env &&
-      #     sed -i -e 's:AUTOMATOR_TASK_DELETED=forge:AUTOMATOR_TASK_DELETED=sample1,sample2:g' .env &&
+#      - name: Find and replace nnpc reusable env variables
+       # run: |
+       #   sed -i -e 's:AUTOMATOR_TASK_CREATED=forge:AUTOMATOR_TASK_CREATED=formbuilder_queue,notification_queue,processflow_queue:g' .env &&
+      #  sed -i -e 's:AUTOMATOR_TASK_UPDATED=forge:AUTOMATOR_TASK_UPDATED=formbuilder_queue,notification_queue,processflow_queue:g' .env &&
+      #    sed -i -e 's:AUTOMATOR_TASK_DELETED=forge:AUTOMATOR_TASK_DELETED=formbuilder_queue,notification_queue,processflow_queue:g' .env
       #     sed -i -e 's:CUSTOMER_CREATED=forge:CUSTOMER_CREATED=sample1,sample2:g' .env &&
       #     sed -i -e 's:CUSTOMER_UPDATED=forge:CUSTOMER_UPDATED=sample1,sample2:g' .env &&
       #     sed -i -e 's:CUSTOMER_DELETED=forge:CUSTOMER_DELETED=sample1,sample2:g' .env &&
@@ -104,7 +107,7 @@ jobs:
         run: |
           sed -i -e 's:/public/index.php:/index.php:g' public/index.php &&
           sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php &&
-          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_service_name_placeholder:g' .env &&
+          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_billing:g' .env &&
           sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_nnpc:g' .env  &&
           sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php &&
           sed -i -e 's:DB_PASSWORD=forge:DB_PASSWORD=nnpcNGML:g' .env &&
@@ -114,7 +117,7 @@ jobs:
           sed -i -e "s:RABBITMQ_USER=forge:RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}:g" .env &&
           sed -i -e "s:RABBITMQ_PASSWORD=forge:RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}:g" .env &&
           sed -i -e "s:RABBITMQ_VHOST=forge:RABBITMQ_VHOST=${{ secrets.RABBITMQ_VHOST }}:g" .env
-# change service_name_placeholder to the name of your service eg automator etc 
+
       - name: SSH login
         run: |
           mkdir -p ~/.ssh
@@ -123,8 +126,8 @@ jobs:
           rsync --delete -va -e 'ssh -p 7822 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             app database phpunit.xml storage vendor artisan .env tests bootstrap \
             composer.json resources composer.lock routes config package.json \
-            public/ public skillz@185.160.67.60:nnpc/api/service_name_placeholder
-# change service_name_placeholder to the name of your service eg automator etc  
+            public/ public skillz@103.72.76.68:nnpc/api/billing
+
       - name: SSH and effect migration
         run: |
-          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60 "cd nnpc/api/service_name_placeholder && php artisan migrate && php artisan db:seed "
+          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@103.72.76.68 "cd nnpc/api/billing && php artisan migrate:fresh"

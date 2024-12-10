@@ -24,31 +24,32 @@ class InvoiceAdviceListItemService
         $rules = $is_update === false ? [
             'customer_id' => 'required|integer',
             'customer_site_id' => 'required|integer',
-            'invoice_advice_id' => 'required|integer',
+
             'daily_volume_id' => 'required|integer',
-            'volume' => 'required|string',
-            'inlet' => 'nullable|string',
-            'outlet' => 'nullable|string',
-            'take_or_pay_value' => 'nullable|string',
-            'allocation' => 'nullable|string',
-            'daily_target' => 'nullable|string',
-            'nomination' => 'nullable|string',
-            'date' => 'required|date',
-            'status' => 'sometimes|integer',
+            'volume' => 'required',
+            'inlet' => 'nullable',
+            'outlet' => 'nullable',
+            'take_or_pay_value' => 'nullable',
+            'allocation' => 'nullable',
+            'daily_target' => 'nullable',
+            'nomination' => 'nullable',
+            'original_date' => 'required',
+            'status' => 'sometimes',
+            'gcc_id' => 'required',
         ] : [
-            'customer_id' => 'sometimes|required|integer',
-            'customer_site_id' => 'sometimes|required|integer',
-            'invoice_advice_id' => 'sometimes|required|integer',
-            'daily_volume_id' => 'sometimes|required|integer',
-            'volume' => 'sometimes|required|string',
-            'inlet' => 'nullable|string',
-            'outlet' => 'nullable|string',
-            'take_or_pay_value' => 'nullable|string',
-            'allocation' => 'nullable|string',
-            'daily_target' => 'nullable|string',
-            'nomination' => 'nullable|string',
-            'date' => 'sometimes|required|date',
-            'status' => 'sometimes|integer',
+            'customer_id' => 'sometimes|required',
+            'customer_site_id' => 'sometimes|required',
+            'daily_volume_id' => 'sometimes|required',
+            'volume' => 'sometimes|required',
+            'inlet' => 'nullable',
+            'outlet' => 'nullable',
+            'take_or_pay_value' => 'nullable',
+            'allocation' => 'nullable',
+            'daily_target' => 'nullable',
+            'nomination' => 'nullable',
+            'original_date' => 'sometimes|required',
+            'status' => 'sometimes',
+            'gcc_id' => 'required',
         ];
 
         // Run the validator with the specified rules
@@ -80,9 +81,11 @@ class InvoiceAdviceListItemService
             }
             $query->where($key, $value);
         }
-
+        if ($per_page > 0) {
+            return $query->paginate($per_page);
+        }
         // Paginate the results
-        return $query->paginate($per_page);
+        return $query->get();
     }
 
     /**

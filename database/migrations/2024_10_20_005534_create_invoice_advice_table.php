@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_site_id');
             $table->string('capex_recovery_amount')->nullable();
             $table->dateTime('date');
+            $table->integer('gcc_id');
             $table->integer('status')->default(0);
             $table->date('from_date')->nullable();
             $table->date('to_date')->nullable();

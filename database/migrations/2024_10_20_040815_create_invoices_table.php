@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('dollar_to_naira_convertion_rate');
             $table->string('vat_amount');
             $table->string('total_volume_paid_for');
+            $table->integer('gcc_id');
             $table->integer('status');
             $table->timestamps();
         });
