@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('customer_site_id');
-            $table->unsignedBigInteger('invoice_advice_id');
+            $table->unsignedBigInteger('invoice_advice_id')->nullable();
             $table->unsignedBigInteger('daily_volume_id');
             $table->string('volume');
             $table->string('inlet')->nullable();
@@ -24,8 +24,9 @@ return new class extends Migration
             $table->string('allocation')->nullable();
             $table->string('daily_target')->nullable();
             $table->string('nomination')->nullable();
-            $table->dateTime('date');
-            $table->integer('status')->default(1);
+            $table->dateTime('original_date');
+            $table->integer('gcc_id');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

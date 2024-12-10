@@ -6,7 +6,7 @@
 >
     <testsuites>
         <testsuite name="Unit">
-            <directory>tests/Unit</directory>
+            <directory suffix="Test.php">tests/Unit</directory>
         </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
@@ -18,11 +18,8 @@
         </include>
     </source>
     <php>
-
-
-        <!-- uncomment USERS_MS and add your laptop IP address for tests to run successfully -->
     <env name="USERS_MS" value="http://172.18.208.1:8001"/>
-
+    <!-- add -->
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
