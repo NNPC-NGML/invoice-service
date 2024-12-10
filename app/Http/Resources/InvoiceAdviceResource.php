@@ -27,8 +27,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(property="updated_at", type="string", format="date-time", example="2024-09-23T10:00:00Z", description="Updated at timestamp"),
  *     @OA\Property(property="gcc_created_by", ref="#/components/schemas/User", description="Details of the GCC creator"),
  *     @OA\Property(property="invoice_advice_created_by", ref="#/components/schemas/User", description="Details of the invoice advice creator"),
- *     @OA\Property(property="customer", ref="#/components/schemas/Customer", description="Details of the customer"),
- *     @OA\Property(property="customer_site", ref="#/components/schemas/CustomerSite", description="Details of the customer site"),
+ 
  *     @OA\Property(
  *         property="invoice_advice_list_items",
  *         type="array",
