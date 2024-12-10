@@ -1,0 +1,2580 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Boilerplate Service ",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/gcc-approved-by-admins": {
+            "get": {
+                "tags": [
+                    "GCC Approved By Admins"
+                ],
+                "summary": "Get a list of GCC approved records with filters and pagination",
+                "description": "Fetches a list of GCC approved records, with optional filtering based on fields in the gcc_approved_by_admins table, and supports pagination.",
+                "operationId": "df63d5449536563aaec7a1cafdb4888c",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter by start date for date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter by end date for date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/gcc-approved-by-admins?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/GccApprovedByAdmin"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Gcc Approved By Admin"
+                ],
+                "summary": "Store a new GCC approved record by admin",
+                "description": "Creates a new GCC approved record with the provided invoice advice ID and additional admin data.",
+                "operationId": "960045eb600fdc24e9b977fe71f3236d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "invoice_advice_id"
+                                ],
+                                "properties": {
+                                    "invoice_advice_id": {
+                                        "description": "ID of the invoice advice",
+                                        "type": "integer",
+                                        "example": 123
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Record created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/GccApprovedByAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invoice Advice ID is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/gcc-approved-by-admins/{id}": {
+            "get": {
+                "tags": [
+                    "GCC Approved By Admins"
+                ],
+                "summary": "Get details of a specific GCC approved record",
+                "description": "Fetches details of a specific GCC approved record by ID.",
+                "operationId": "d5465c6231a3b3baaa512d052a2e734b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the GCC approved record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/GccApprovedByAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "GCC Approved By Admins"
+                ],
+                "summary": "Delete a specific GCC approved record",
+                "description": "Deletes a specific GCC approved record by ID.",
+                "operationId": "a029cb3cef238ba52a3c1c2d83970b5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the GCC approved record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "GCC approved record deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/gcc-approved-by-customers": {
+            "get": {
+                "tags": [
+                    "GCC Approved By Customers"
+                ],
+                "summary": "Get a list of customer approvals with filters and pagination",
+                "description": "Fetches a list of customer approvals, with optional filtering based on fields in the gcc_approved_by_customers table, and supports pagination.",
+                "operationId": "dc66c22c2e1554fc3b140e6ad89547f6",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter by start date for date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter by end date for date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/gcc-approved-by-customers?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/GccApprovedByCustomer"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Gcc Approved By Customer"
+                ],
+                "summary": "Store a new GCC approved record",
+                "description": "Creates a new GCC approved record with the provided customer information, signature, and date.",
+                "operationId": "44babd881530f8763b88b0417063fb51",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "customer_name",
+                                    "signature",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "customer_name": {
+                                        "description": "Name of the customer",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "John Doe"
+                                    },
+                                    "signature": {
+                                        "description": "Customer's digital signature in base64 format",
+                                        "type": "string",
+                                        "example": "Base64EncodedSignature"
+                                    },
+                                    "date": {
+                                        "description": "Date of the approval",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-11-13"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Record created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/GccApprovedByCustomer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/gcc-approved-by-customers/{id}": {
+            "get": {
+                "tags": [
+                    "GCC Approved By Customers"
+                ],
+                "summary": "Get details of a specific customer approval record",
+                "description": "Fetches details of a specific customer approval record by ID.",
+                "operationId": "53b306c0f13c30f02136eb87f33e6489",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the customer approval record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/GccApprovedByCustomer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "GCC Approved By Customers"
+                ],
+                "summary": "Delete a specific customer approval record",
+                "description": "Deletes a specific customer approval record by ID.",
+                "operationId": "101c6f6f6b63a0f630fa8f641a4d6b5c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the customer approval record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Customer approval record deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/gcc/create": {
+            "post": {
+                "tags": [
+                    "GCC"
+                ],
+                "summary": "Create a new GCC",
+                "description": "Creates a new GCC entry and its associated list items.",
+                "operationId": "e8543fbb3bc14b5e6d815c692506f7f9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "customer_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "customer_site_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "list_item": {
+                                        "type": "string",
+                                        "example": "JSON_ENCODED_LIST_ITEMS"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "GCC created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Gcc created successfully"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error details"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gcc-init": {
+            "post": {
+                "tags": [
+                    "GCC"
+                ],
+                "summary": "Initiate GCC process",
+                "description": "Fetches the last GCC record or generates new list items for a customer and site.",
+                "operationId": "a3751121cf3d4f0eda3462da1ef2f8b2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "customer_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "customer_site_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "GCC initiated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "GCC not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "GCC not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/invoice-advice-approved-bies": {
+            "get": {
+                "tags": [
+                    "Invoice Advice Approved Bies"
+                ],
+                "summary": "Get a list of approved invoice advices with filters and pagination",
+                "description": "Fetches a list of approved invoice advices, with optional filtering based on fields in the invoice advice approved bies table, and supports pagination.",
+                "operationId": "25be28cdb97072872bfed6bc6ab800e0",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter by start date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter by end date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/invoice-advice-approved-bies?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/InvoiceAdviceApprovedBy"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/invoice-advice-approved-bies/{id}": {
+            "get": {
+                "tags": [
+                    "Invoice Advice Approved Bies"
+                ],
+                "summary": "Get details of a specific InvoiceAdviceApprovedBy record",
+                "description": "Fetches details of a specific InvoiceAdviceApprovedBy record by ID.",
+                "operationId": "ede26fe8adef87f237f6109af524c882",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the InvoiceAdviceApprovedBy record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/InvoiceAdviceApprovedBy"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Invoice Advice Approved Bies"
+                ],
+                "summary": "Delete a specific InvoiceAdviceApprovedBy record",
+                "description": "Deletes a specific InvoiceAdviceApprovedBy record by ID.",
+                "operationId": "82d72bc471996076ac1e33f60cb9ae6d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the InvoiceAdviceApprovedBy record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice Advice Approved By record deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/invoice-advice": {
+            "get": {
+                "tags": [
+                    "Invoice Advice"
+                ],
+                "summary": "Get a list of invoice advice records with filters and pagination",
+                "description": "Fetches a list of invoice advice records, with optional filtering based on fields in the invoice advice table, and supports pagination.",
+                "operationId": "5e70a7560518552b4e9f1709b931f778",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter by start date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter by end date",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/invoice-advice?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/InvoiceAdvice"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Invoice Advice"
+                ],
+                "summary": "Create a new InvoiceAdvice record",
+                "description": "Creates a new InvoiceAdvice record based on the provided customer ID and customer site ID.",
+                "operationId": "2707e7e6b13ea20eec39b5cebc54308b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "customer_id",
+                                    "customer_site_id"
+                                ],
+                                "properties": {
+                                    "customer_id": {
+                                        "description": "ID of the customer",
+                                        "type": "integer",
+                                        "example": 123
+                                    },
+                                    "customer_site_id": {
+                                        "description": "ID of the customer site",
+                                        "type": "integer",
+                                        "example": 456
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "InvoiceAdvice created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/InvoiceAdvice"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Customer ID and Customer Site ID are required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Customer Site not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/invoice-advice/{id}": {
+            "get": {
+                "tags": [
+                    "Invoice Advice"
+                ],
+                "summary": "Get details of a specific InvoiceAdvice record",
+                "description": "Fetches details of a specific InvoiceAdvice record by ID.",
+                "operationId": "9ae1b2900de2b0639a7160c093481a46",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the InvoiceAdvice record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/InvoiceAdvice"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Invoice Advice"
+                ],
+                "summary": "Delete a specific InvoiceAdvice record",
+                "description": "Deletes a specific InvoiceAdvice record by ID.",
+                "operationId": "d7c7618b29ac5eef8aa704adc45cc0c7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the InvoiceAdvice record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice Advice record deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/invoice-advice-list-items": {
+            "get": {
+                "tags": [
+                    "Invoice Advice List Items"
+                ],
+                "summary": "Get a list of invoice advice list items with filters and pagination",
+                "description": "Fetches a list of invoice advice list items, with optional filtering and pagination support.",
+                "operationId": "9cdab23b994f15952c93ad011df2966d",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/invoice-advice-list-items?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/InvoiceAdviceListItem"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/invoice-advice-list-items/{id}": {
+            "get": {
+                "tags": [
+                    "Invoice Advice List Items"
+                ],
+                "summary": "Get details of a specific InvoiceAdviceListItem",
+                "description": "Fetches details of a specific InvoiceAdviceListItem by ID.",
+                "operationId": "600885ea9c177990ced28e7e8dd1d3f4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the InvoiceAdviceListItem",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/InvoiceAdviceListItem"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Invoice Advice List Items"
+                ],
+                "summary": "Delete a specific InvoiceAdviceListItem",
+                "description": "Deletes a specific InvoiceAdviceListItem by ID.",
+                "operationId": "931cf372d120fabfe2bec5ce46826f12",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the InvoiceAdviceListItem",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice advice list item deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/invoices": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Get a list of invoices with filters and pagination",
+                "description": "Fetches a list of invoices, with optional filtering based on fields in the invoices table, and supports pagination.",
+                "operationId": "0b8e5b661b472432febe76177e627e86",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by invoice status",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/invoices?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Invoice"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/invoices/{id}": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Get details of a specific Invoice record",
+                "description": "Fetches details of a specific Invoice record by ID.",
+                "operationId": "6f9874ec6f7301133948074ff6108fcb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Invoice record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/Invoice"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Delete a specific Invoice record",
+                "description": "Deletes a specific Invoice record by ID.",
+                "operationId": "f6705ba1adcf67585cb5f13627c592ae",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Invoice record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice record deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/letter-templates": {
+            "get": {
+                "tags": [
+                    "Letter Templates"
+                ],
+                "summary": "Get a list of letter templates with filters and pagination",
+                "description": "Fetches a list of letter templates, with optional filtering and pagination support.",
+                "operationId": "3ab483192f1c76bede9618c4c2f824ea",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/letter-templates?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/LetterTemplate"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Letter Templates"
+                ],
+                "summary": "Create a new LetterTemplate",
+                "description": "Creates a new LetterTemplate.",
+                "operationId": "c8b427de9ba3ae5b67f9ab13c8af302e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "letter": {
+                                        "type": "string",
+                                        "example": "Your letter content here"
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "LetterTemplate created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/LetterTemplate"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/letter-templates/{id}": {
+            "get": {
+                "tags": [
+                    "Letter Templates"
+                ],
+                "summary": "Get details of a specific LetterTemplate",
+                "description": "Fetches details of a specific LetterTemplate by ID.",
+                "operationId": "084ae92c44dd19fdb5a9cf897b3968af",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the LetterTemplate",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/LetterTemplate"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Letter Templates"
+                ],
+                "summary": "Delete a specific LetterTemplate",
+                "description": "Deletes a specific LetterTemplate by ID.",
+                "operationId": "9bdb477d0188474dbac311737e6cbbf1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the LetterTemplate",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "LetterTemplate deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/ngml-accounts": {
+            "get": {
+                "tags": [
+                    "NGML Accounts"
+                ],
+                "summary": "Get a list of NGML accounts with filters and pagination",
+                "description": "Fetches a list of NGML accounts, with optional filtering and pagination support.",
+                "operationId": "46e9e2d6a5400a01b11bc611ddf24391",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/ngml-accounts?page=2",
+                                                    "nullable": true
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 200
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/NgmlAccount"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ngml-accounts/{id}": {
+            "get": {
+                "tags": [
+                    "NGML Accounts"
+                ],
+                "summary": "Get details of a specific NGML account",
+                "description": "Fetches details of a specific NGML account by ID.",
+                "operationId": "3c61e8e8c5bdaf56240990e72f406ba0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the NGML account",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "": {
+                                            "$ref": "#/components/schemas/NgmlAccount"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "NGML Accounts"
+                ],
+                "summary": "Delete a specific NGML account",
+                "description": "Deletes a specific NGML account by ID.",
+                "operationId": "b68b44aa29f98ef88442a8e521c95d37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the NGML account",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "NGML account deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "GccApprovedByAdmin": {
+                "title": "GCC Approved by Admin",
+                "properties": {
+                    "id": {
+                        "description": "ID of the approval record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "description": "ID of the user who approved",
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "invoice_advice_id": {
+                        "description": "ID of the associated invoice advice",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "date": {
+                        "description": "Approval date",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-23T10:00:00Z"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "GccApprovedByCustomer": {
+                "title": "GCC Approved by Customer",
+                "properties": {
+                    "id": {
+                        "description": "ID of the approved record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "customer_name": {
+                        "description": "Name of the customer",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "signature": {
+                        "description": "Signature of the customer",
+                        "type": "string",
+                        "example": "base64_encoded_signature"
+                    },
+                    "date": {
+                        "description": "Date of approval",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-23T14:30:00Z"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "InvoiceAdviceApprovedBy": {
+                "title": "Invoice Advice Approved By",
+                "properties": {
+                    "id": {
+                        "description": "ID of the invoice advice approval record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "description": "ID of the user who approved the invoice advice",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "invoice_advice_id": {
+                        "description": "ID of the invoice advice being approved",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "approval_for": {
+                        "description": "Approval status code or type",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "date": {
+                        "description": "Date of approval",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-23T10:00:00Z"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "InvoiceAdviceListItem": {
+                "title": "Invoice Advice List Item",
+                "properties": {
+                    "id": {
+                        "description": "ID of the invoice advice list item",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "customer_id": {
+                        "description": "ID of the customer",
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "customer_site_id": {
+                        "description": "ID of the customer site",
+                        "type": "integer",
+                        "example": 456
+                    },
+                    "volume": {
+                        "description": "Volume of gas or energy",
+                        "type": "string",
+                        "example": "1000"
+                    },
+                    "inlet": {
+                        "description": "Inlet value",
+                        "type": "string",
+                        "example": "50"
+                    },
+                    "outlet": {
+                        "description": "Outlet value",
+                        "type": "string",
+                        "example": "40"
+                    },
+                    "take_or_pay_value": {
+                        "description": "Take or Pay value",
+                        "type": "string",
+                        "example": "500"
+                    },
+                    "allocation": {
+                        "description": "Allocation value",
+                        "type": "string",
+                        "example": "300"
+                    },
+                    "daily_target": {
+                        "description": "Daily target value",
+                        "type": "string",
+                        "example": "200"
+                    },
+                    "nomination": {
+                        "description": "Nomination value",
+                        "type": "string",
+                        "example": "250"
+                    },
+                    "daily_gas_id": {
+                        "description": "ID of the associated daily gas record",
+                        "type": "integer",
+                        "example": 789
+                    },
+                    "date": {
+                        "description": "Date of the record",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-23T10:00:00Z"
+                    },
+                    "status": {
+                        "description": "Status of the invoice advice list item",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "InvoiceAdvice": {
+                "title": "Invoice Advice",
+                "properties": {
+                    "id": {
+                        "description": "ID of the invoice advice record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "with_vat": {
+                        "description": "Indicates if VAT is included",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "customer_id": {
+                        "description": "ID of the customer",
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "customer_site_id": {
+                        "description": "ID of the customer site",
+                        "type": "integer",
+                        "example": 456
+                    },
+                    "capex_recovery_amount": {
+                        "description": "CAPEX recovery amount",
+                        "type": "string",
+                        "example": "10000.00"
+                    },
+                    "date": {
+                        "description": "Date of the invoice advice",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-23T10:00:00Z"
+                    },
+                    "status": {
+                        "description": "Status of the invoice advice record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "department": {
+                        "description": "Department associated with the invoice advice",
+                        "type": "string",
+                        "example": "Finance"
+                    },
+                    "gcc_created_by_id": {
+                        "description": "ID of the GCC creator",
+                        "type": "integer",
+                        "example": 7
+                    },
+                    "invoice_advice_created_by_id": {
+                        "description": "ID of the invoice advice creator",
+                        "type": "integer",
+                        "example": 8
+                    },
+                    "from_date": {
+                        "description": "Start date of the invoice period",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-09-01"
+                    },
+                    "to_date": {
+                        "description": "End date of the invoice period",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-09-30"
+                    },
+                    "total_quantity_of_gas": {
+                        "description": "Total quantity of gas",
+                        "type": "number",
+                        "format": "float",
+                        "example": 12345.67
+                    },
+                    "created_at": {
+                        "description": "Created at timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-08-23T10:00:00Z"
+                    },
+                    "updated_at": {
+                        "description": "Updated at timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-23T10:00:00Z"
+                    },
+                    "gcc_created_by": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "invoice_advice_created_by": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "invoice_advice_list_items": {
+                        "description": "List of invoice advice items",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InvoiceAdviceListItem"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Invoice": {
+                "title": "Invoice",
+                "properties": {
+                    "id": {
+                        "description": "ID of the invoice record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "invoice_number": {
+                        "description": "Unique invoice number",
+                        "type": "string",
+                        "example": "INV-12345"
+                    },
+                    "invoice_advice_id": {
+                        "description": "ID of the related invoice advice",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "consumed_volume_amount_in_naira": {
+                        "description": "Consumed volume amount in Naira",
+                        "type": "string",
+                        "example": "1000.00"
+                    },
+                    "consumed_volume_amount_in_dollar": {
+                        "description": "Consumed volume amount in Dollar",
+                        "type": "string",
+                        "example": "2.50"
+                    },
+                    "dollar_to_naira_convertion_rate": {
+                        "description": "Conversion rate from Dollar to Naira",
+                        "type": "string",
+                        "example": "400.00"
+                    },
+                    "vat_amount": {
+                        "description": "VAT amount for the invoice",
+                        "type": "string",
+                        "example": "250.00"
+                    },
+                    "total_volume_paid_for": {
+                        "description": "Total volume paid for",
+                        "type": "string",
+                        "example": "1250.00"
+                    },
+                    "status": {
+                        "description": "Status of the invoice (e.g., 0 = unpaid, 1 = paid)",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "LetterTemplate": {
+                "title": "Letter Template",
+                "properties": {
+                    "id": {
+                        "description": "ID of the letter template",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "letter": {
+                        "description": "Content of the letter template",
+                        "type": "string",
+                        "example": "Sample Letter Content"
+                    },
+                    "status": {
+                        "description": "Status of the letter template",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "NgmlAccount": {
+                "title": "NGML Account",
+                "properties": {
+                    "id": {
+                        "description": "ID of the NGML account record",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "bank_name": {
+                        "description": "Name of the bank",
+                        "type": "string",
+                        "example": "Bank of Example"
+                    },
+                    "bank_address": {
+                        "description": "Address of the bank",
+                        "type": "string",
+                        "example": "123 Bank St, City, Country"
+                    },
+                    "account_name": {
+                        "description": "Name associated with the account",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "account_number": {
+                        "description": "Account number",
+                        "type": "string",
+                        "example": "123456789"
+                    },
+                    "sort_code": {
+                        "description": "Sort code of the account",
+                        "type": "string",
+                        "example": "12-34-56"
+                    },
+                    "tin": {
+                        "description": "Tax Identification Number (TIN)",
+                        "type": "string",
+                        "example": "AB123456789"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User resource schema",
+                "properties": {
+                    "id": {
+                        "description": "ID of the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Name of the user",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "Email address of the user",
+                        "type": "string",
+                        "format": "email",
+                        "example": "john.doe@example.com"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "GCC Approved By Admins",
+            "description": "GCC Approved By Admins"
+        },
+        {
+            "name": "Gcc Approved By Admin",
+            "description": "Gcc Approved By Admin"
+        },
+        {
+            "name": "GCC Approved By Customers",
+            "description": "GCC Approved By Customers"
+        },
+        {
+            "name": "Gcc Approved By Customer",
+            "description": "Gcc Approved By Customer"
+        },
+        {
+            "name": "GCC",
+            "description": "GCC"
+        },
+        {
+            "name": "Invoice Advice Approved Bies",
+            "description": "Invoice Advice Approved Bies"
+        },
+        {
+            "name": "Invoice Advice",
+            "description": "Invoice Advice"
+        },
+        {
+            "name": "Invoice Advice List Items",
+            "description": "Invoice Advice List Items"
+        },
+        {
+            "name": "Invoices",
+            "description": "Invoices"
+        },
+        {
+            "name": "Letter Templates",
+            "description": "Letter Templates"
+        },
+        {
+            "name": "NGML Accounts",
+            "description": "NGML Accounts"
+        }
+    ]
+}

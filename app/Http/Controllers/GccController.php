@@ -51,7 +51,38 @@ class GccController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/gcc/create",
+     *     tags={"GCC"},
+     *     summary="Create a new GCC",
+     *     description="Creates a new GCC entry and its associated list items.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="customer_id", type="integer", example=1),
+     *             @OA\Property(property="customer_site_id", type="integer", example=1),
+     *             @OA\Property(property="list_item", type="string", example="JSON_ENCODED_LIST_ITEMS")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="GCC created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Gcc created successfully"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Error details")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -150,6 +181,39 @@ class GccController extends Controller
         //
     }
 
+    /**
+     * @OA\Post(
+     *     path="/gcc-init",
+     *     tags={"GCC"},
+     *     summary="Initiate GCC process",
+     *     description="Fetches the last GCC record or generates new list items for a customer and site.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="customer_id", type="integer", example=1),
+     *             @OA\Property(property="customer_site_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="GCC initiated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="GCC not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="GCC not found")
+     *         )
+     *     )
+     * )
+     */
+
     public function initiateGcc(Request $request)
     {
         // validate the request
@@ -196,4 +260,6 @@ class GccController extends Controller
             ],
         ], 200);
     }
+
+    public function approveGccAdmin($id) {}
 }
