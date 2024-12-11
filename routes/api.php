@@ -24,13 +24,14 @@ use App\Http\Controllers\TestController;
 |
 */
 
-
+Route::post('gcc/customer/approve/{id}', [GccController::class, 'approveGccCustomer']);
 Route::middleware('scope.user')->group(function () {
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);
     });
     Route::post('gcc-init', [GccController::class, 'initiateGcc']);
     Route::post('gcc/create', [GccController::class, 'store']);
+    Route::get('gcc/admin/approve/{id}', [GccController::class, 'approveGccAdmin']);
     Route::get('invoice-advice', [InvoiceAdviceController::class, 'index']);
     Route::post('invoice-advice', [InvoiceAdviceController::class, 'store']);   //new
     Route::get('invoice-advice/{id}', [InvoiceAdviceController::class, 'show']);

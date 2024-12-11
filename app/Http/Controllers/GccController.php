@@ -7,8 +7,10 @@ use App\Models\Gcc;
 use App\Models\DailyVolume;
 use App\Services\GccService;
 use Illuminate\Http\Request;
+use App\Models\GccApprovedByAdmin;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\GccResource;
+use App\Models\GccApprovedByCustomer;
 use App\Services\InvoiceAdviceListItemService;
 
 class GccController extends Controller
@@ -114,7 +116,7 @@ class GccController extends Controller
 
                 foreach ($decryptedListItems as $item) {
                     $listItemsData[] = [
-                        "gcc_id" => $gcc->id,
+                        "gcc_id" => $gcc["gcc_id"],
                         'customer_id' => $request->customer_id,
                         'customer_site_id' => $request->customer_site_id,
                         'daily_volume_id' => $item->id,
@@ -165,13 +167,7 @@ class GccController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateGccRequest $request, Gcc $gcc)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -261,5 +257,77 @@ class GccController extends Controller
         ], 200);
     }
 
-    public function approveGccAdmin($id) {}
+    public function approveGccAdmin($id)
+    {
+        try {
+            DB::beginTransaction();
+            // get gcc and update the status 
+            $gcc = $this->gccService->getGccById($id);
+            if ($gcc) {
+                // create admin approval data
+                $data = [
+                    "gcc_id" => $gcc->id,
+                    "user_id" => auth()->user()->id,
+                    'customer_id' => $gcc->customer_id,
+                    'customer_site_id' => $gcc->customer_site_id,
+                ];
+                // create admin approval
+                $adminAprovalModel = GccApprovedByAdmin::create($data);
+                if ($adminAprovalModel) {
+                    $gcc->status = Gcc::GCCAPPROVEDBYADMIN;
+                    $gcc->save();
+                }
+                $gcc = $this->gccService->getGccById($id);
+                $responseData = new GccResource($gcc);
+                DB::commit();
+                return $responseData->additional([
+                    "status" => "success",
+                    "message" => "Gcc approved by admin  successfully",
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+    public function approveGccCustomer($id, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            // get gcc and update the status 
+            $gcc = $this->gccService->getGccById($id);
+            if ($gcc) {
+                // create admin approval data
+                $data = [
+                    "gcc_id" => $gcc->id,
+                    "customer_name" => $request->customer_name,
+                    'customer_id' => $gcc->customer_id,
+                    'customer_site_id' => $gcc->customer_site_id,
+                    'signature' => $request->signature,
+                ];
+                // create admin approval
+                $customerApprovalModel = GccApprovedByCustomer::create($data);
+                if ($customerApprovalModel) {
+                    $gcc->status = Gcc::GCCAPPROVEDBYCUSTOMER;
+                    $gcc->save();
+                }
+                $gcc = $this->gccService->getGccById($id);
+                $responseData = new GccResource($gcc);
+                DB::commit();
+                return $responseData->additional([
+                    "status" => "success",
+                    "message" => "Gcc approved by customer  successfully",
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
 }

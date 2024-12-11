@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('gcc_approved_by_customers', function (Blueprint $table) {
             $table->id();
             $table->string('customer_name');
+            $table->integer('customer_id');
+            $table->integer('gcc_id');
+            $table->integer('customer_site_id');
             $table->string('signature');
-            $table->dateTime('date');
             $table->timestamps();
         });
     }
