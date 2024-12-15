@@ -25,6 +25,7 @@ use App\Http\Controllers\TestController;
 */
 
 Route::post('gcc/customer/approve/{id}', [GccController::class, 'approveGccCustomer']);
+Route::get('gcc/unauthenticated/customer/{id}', [GccController::class, 'getGccByUnauthenticatedUser']);
 Route::middleware('scope.user')->group(function () {
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);

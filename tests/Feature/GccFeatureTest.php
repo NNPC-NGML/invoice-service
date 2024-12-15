@@ -10,7 +10,7 @@ use App\Models\InvoiceAdviceListItem;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class GccTest extends TestCase
+class GccFeatureTest extends TestCase
 {
     use RefreshDatabase;
     /**
@@ -289,6 +289,8 @@ class GccTest extends TestCase
                 "gcc",
                 "invoice_advice",
                 "invoice",
+                "gcc_approved_by_admin",
+                "gcc_approved_by_customer",
             ],
         ])->assertJson([
             "status" => "success",
@@ -377,6 +379,7 @@ class GccTest extends TestCase
             "signature" => "test",
         ];
         $response = $this->postJson('/api/gcc/customer/approve/' . $createGcc->id, $data);
+
         $response->assertStatus(200);
         $this->assertDatabaseHas("gcc_approved_by_customers", ["gcc_id" => $createGcc->id, "customer_name" => "test"]);
         $this->assertDatabaseHas("gccs", ["status" => Gcc::GCCAPPROVEDBYCUSTOMER]);
@@ -387,6 +390,102 @@ class GccTest extends TestCase
                 "gcc",
                 "invoice_advice",
                 "invoice",
+                "gcc_approved_by_admin",
+                "gcc_approved_by_customer",
+            ],
+        ])->assertJson([
+            "status" => "success",
+            "data" => [
+                "list_item" => [
+                    [
+                        "id" => 1,
+                        "customer_id" => 1,
+                        "customer_site_id" => 1,
+                        "daily_volume_id" => 1,
+                        "volume" => "1000",
+                        "inlet" => "200",
+                        "outlet" => "20",
+                        "allocation" => "200",
+                        "nomination" => "200",
+                        "gcc_id" => 1,
+                        "status" => 1,
+
+                    ]
+                ],
+                "gcc" => [
+                    "id" => 1,
+                    "with_vat" => 1,
+                    "customer_id" => 1,
+                    "customer_site_id" => 1,
+                    "capex_recovery_amount" => "200",
+                    "department_id" => 1,
+                    "gcc_created_by" => 1,
+                    "letter_id" => 1,
+                ],
+                "invoice_advice" => null,
+                "invoice" => null,
+            ],
+        ]);
+    }
+
+    public function test_that_gcc_can_be_fetched_by_unauthenticated_user(): void
+    {
+        // create two invoice advice for the previous month
+        $dailyVolume = DailyVolume::factory()->create([
+            "inlet_pressure" => 200,
+            "outlet_pressure" => 20,
+            "allocation" => 200,
+            "nomination" => 200,
+            "status" => 1,
+            "created_by" => 1,
+            "approved_by" => 1,
+            "created_at" => Carbon::now()->subMonth()->subDay(),
+            "updated_at" => Carbon::now()->subMonth()->subDay(),
+            "customer_id" => 1,
+            "customer_site_id" => 1,
+            "volume" => 1000,
+        ]);
+
+        $createGcc = Gcc::factory()->create([
+            "customer_id" => 1,
+            "customer_site_id" => 1,
+            "gcc_date" => Carbon::now()->subMonth(),
+            "gcc_created_by" => 1,
+            "department_id" => 1,
+            "capex_recovery_amount" => 200,
+            "with_vat" => true,
+            "status" => 0,
+        ]);
+        // create invoice advice list item 
+        InvoiceAdviceListItem::factory()->create([
+            "gcc_id" => $createGcc->id,
+            "customer_id" => 1,
+            "customer_site_id" => 1,
+            "daily_volume_id" => 1,
+            "volume" => 1000,
+            "inlet" => 200,
+            "outlet" => 20,
+            "allocation" => 200,
+            "nomination" => 200,
+            "status" => 1,
+            "original_date" => Carbon::now()->subMonth()->subDay(),
+            "created_at" => Carbon::now()->subMonth()->subDay(),
+            "updated_at" => Carbon::now()->subMonth()->subDay(),
+        ]);
+
+        $this->actingAsUnAuthenticatedTestUser();
+
+        $response = $this->getJson('/api/gcc/unauthenticated/customer/' . $createGcc->id);
+
+        $response->assertStatus(200)->assertJsonStructure([
+            "status",
+            "data" => [
+                "list_item",
+                "gcc",
+                "invoice_advice",
+                "invoice",
+                "gcc_approved_by_admin",
+                "gcc_approved_by_customer",
             ],
         ])->assertJson([
             "status" => "success",

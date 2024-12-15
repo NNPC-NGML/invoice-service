@@ -89,6 +89,7 @@ class GccController extends Controller
     public function store(Request $request)
     {
         $userId = auth();
+
         DB::beginTransaction();
         //'capex_recovery_amount' => 0, would come based on customer check
         // 'with_vat' => 0, would come based on customer check
@@ -101,7 +102,7 @@ class GccController extends Controller
                 'gcc_date' => Carbon::now()->subMonth()->subDay(),
                 'capex_recovery_amount' => 0,
                 'with_vat' => 0,
-                'gcc_created_by' => $userId->id(),
+                'gcc_created_by' => $userId->user()->id,
                 'letter_id' => 1,
                 'department_id' => 1,
                 'status' => 11,
@@ -116,7 +117,7 @@ class GccController extends Controller
 
                 foreach ($decryptedListItems as $item) {
                     $listItemsData[] = [
-                        "gcc_id" => $gcc["gcc_id"],
+                        "gcc_id" => $gcc->id,
                         'customer_id' => $request->customer_id,
                         'customer_site_id' => $request->customer_site_id,
                         'daily_volume_id' => $item->id,
@@ -329,5 +330,21 @@ class GccController extends Controller
                 'message' => $e->getMessage(),
             ], 400);
         }
+    }
+
+    public function getGccByUnauthenticatedUser($id)
+    {
+        $gcc = $this->gccService->getGccById($id);
+        if ($gcc) {
+            $responseData = new GccResource($gcc);
+            return $responseData->additional([
+                "status" => "success",
+                "message" => "Gcc fetched successfully",
+            ]);
+        }
+        return response()->json([
+            'status' => 'error',
+            'data' => "something went wrong",
+        ], 200);
     }
 }
