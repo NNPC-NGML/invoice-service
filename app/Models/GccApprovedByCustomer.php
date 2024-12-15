@@ -12,10 +12,10 @@ class GccApprovedByCustomer extends Model
     protected $fillable = [
         'customer_name',
         'signature',
-        'date',
+        'gcc_id',
+        'customer_id',
+        'customer_site_id',
     ];
 
-    protected $casts = [
-        'date' => 'datetime',
-    ];
+    protected $casts = [];
 }

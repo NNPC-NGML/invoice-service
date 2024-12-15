@@ -45,4 +45,12 @@ class Gcc extends Model
     {
         return $this->hasMany(InvoiceAdviceListItem::class);
     }
+    public function gccApprovedByAdmin()
+    {
+        return $this->hasOne(GccApprovedByAdmin::class);
+    }
+    public function gccApprovedByCustomer()
+    {
+        return $this->hasOne(GccApprovedByCustomer::class);
+    }
 }

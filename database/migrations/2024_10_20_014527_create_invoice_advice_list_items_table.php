@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('allocation')->nullable();
             $table->string('daily_target')->nullable();
             $table->string('nomination')->nullable();
-            $table->dateTime('original_date');
+            $table->timestamp('original_date');
             $table->integer('gcc_id');
             $table->integer('status')->default(0);
             $table->timestamps();

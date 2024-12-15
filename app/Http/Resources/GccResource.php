@@ -19,6 +19,9 @@ class GccResource extends JsonResource
             "gcc" => parent::toArray($request),
             "invoice_advice" => $this->invoiceAdvice,
             "invoice" => $this->invoice,
+            "gcc_approved_by_admin" => $this->gccApprovedByCustomer,
+            "gcc_approved_by_customer" => $this->gccApprovedByCustomer,
+            "total_volume" => $this->listItems->where('status', 1)->sum('volume'),
         ];
     }
 }

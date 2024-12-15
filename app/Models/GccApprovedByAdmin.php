@@ -12,21 +12,16 @@ class GccApprovedByAdmin extends Model
     protected $fillable = [
         'user_id',
         'invoice_advice_id',
-        'date'
+        'gcc_id',
+        'customer_id',
+        'customer_site_id',
     ];
 
-    protected $casts = [
-        'date' => 'datetime'
-    ];
+    protected $casts = [];
 
     // Optional: Define relationships if needed
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function invoiceAdvice()
-    {
-        return $this->belongsTo(InvoiceAdvice::class);
     }
 }

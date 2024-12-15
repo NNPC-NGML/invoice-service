@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('gcc_approved_by_admins', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('invoice_advice_id');
-            $table->dateTime('date');
+            $table->unsignedBigInteger('gcc_id');
+            $table->integer('customer_id');
+            $table->integer('customer_site_id');
             $table->timestamps();
         });
     }
